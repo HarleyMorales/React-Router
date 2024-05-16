@@ -7,8 +7,8 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router-dom";
-import { getContacts, createContact } from "../contacts";
 import { useEffect } from "react";
+import { getContacts, createContact } from "../contacts";
 
 // Loader to fetch contacts
 export async function loader({ request }) {
@@ -51,7 +51,10 @@ export default function Root() {
               name="q"
               defaultValue={q}
               onChange={(event) => {
-                submit(event.currentTarget.form);
+                const isFirstSearch = q == null;
+                submit(event.currentTarget.form, {
+                  replace: !isFirstSearch,
+                });
               }}
               className={searching ? "loading" : ""}
             />
