@@ -15,7 +15,16 @@ export async function getContacts(query) {
 export async function createContact() {
   await fakeNetwork();
   let id = Math.random().toString(36).substring(2, 9);
-  let contact = { id, createdAt: Date.now() };
+  let contact = {
+    id,
+    createdAt: Date.now(),
+    first: "First Name",
+    last: "Last Name",
+    phone: "123-456-7890",
+    email: "example@example.com",
+    avatar: "https://example.com/avatar.jpg",
+    notes: "Some notes"
+  };
   let contacts = await getContacts();
   contacts.unshift(contact);
   await set(contacts);
@@ -54,7 +63,6 @@ function set(contacts) {
   return localforage.setItem("contacts", contacts);
 }
 
-// fake a cache so we don't slow down stuff we've already seen
 let fakeCache = {};
 
 async function fakeNetwork(key) {
