@@ -49,6 +49,7 @@ export async function updateContact(id, updates) {
 }
 
 export async function deleteContact(id) {
+  await fakeNetwork();
   let contacts = await localforage.getItem("contacts");
   let index = contacts.findIndex(contact => contact.id === id);
   if (index > -1) {
