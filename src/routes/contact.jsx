@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Form, useLoaderData, useNavigate } from 'react-router-dom';
-import { getContact, deleteContact } from '../contacts';
+import { useLoaderData, Form } from 'react-router-dom';
+import { getContact } from '../contacts';
 
 export async function loader({ params }) {
   const contact = await getContact(params.contactId);
@@ -15,12 +15,6 @@ export async function loader({ params }) {
 
 export default function Contact() {
   const contact = useLoaderData();
-  const navigate = useNavigate();
-
-  const handleDelete = async () => {
-    await deleteContact(contact.id);
-    navigate('/');
-  };
 
   return (
     <div id="contact">
@@ -28,15 +22,22 @@ export default function Contact() {
         <img src={contact.avatar} alt={`${contact.first} ${contact.last}`} />
         <div>
           <h2>{contact.first} {contact.last}</h2>
-          <p>{contact.twitter}</p>
+          <p>@{contact.twitter}</p>
           <p>{contact.notes}</p>
           <p>Phone: {contact.phone}</p>
           <p>Email: {contact.email}</p>
         </div>
       </div>
-      <Form method="post">
-        <button type="submit" formAction={`/contacts/${contact.id}/edit`}>Edit</button>
-        <button type="button" onClick={handleDelete}>Delete</button>
+      <Form
+        method="post"
+        action="destroy"
+        onSubmit={(event) => {
+          if (!confirm("Please confirm you want to delete this record.")) {
+            event.preventDefault();
+          }
+        }}
+      >
+        <button type="submit">Delete</button>
       </Form>
     </div>
   );
